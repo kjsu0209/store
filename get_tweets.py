@@ -77,50 +77,45 @@ def init_db():
 
 ##get_tweets.py
 def main():
-    screen_name = ["kyunghyang", "Chosun", "joongangilbo"]
+    screen_name = ["joongangilbo"]
+   # screen_name = ["kyunghyang", "Chosun", "joongangilbo"]
     CONSUMER_KEY = "qZHgrr3O0knOt075c49LwYLcq"
     CONSUMER_SECRET = "LhB7M1cIqckNJw6EDTYCxOkeOQ1Gq8fkPIbcd5ril7qa1sEntF"
     ACCESS_TOKEN = "1147813462250123266-GSdmBBPVDWbiD6cqXcSluBawr0t7JB"
     ACCESS_SECRET = "kV4L39AIQn7aTsj6ldu8cfYc4H6JwQLVI9VEqvcvtDvZg"
-    num_posts = 200 #max tweets per request : 200
-
+    num_posts = 100000 #max tweets per request
+    start_date = "2017-01-01"
+    end_date = "2019-06-30"
+    
     client = oauth2_request(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
 
     #initialize db
-    db = init_db()
+    db = init_db() 
 
-    #kyunghyang
+    for name in screen_name:
+        yeargap = int(end_date[0:4]) - int(start_date[0:4])
+        for i in range(yeargap+1):
+            year = int(start_date[0:4]) + i
+            if(i == 0 and yeargap == 0):
+               read_tweets(name, start_date, end_date, num_posts, db)
+            elif(i == 0 and yeargap != 0):
+               read_tweets(name, start_date,str(year) + '-12-31', num_posts, db)
+            elif(i == yeargap):
+               read_tweets(name,str(year) + '-01-01', end_date, num_posts, db)
+            else:
+               read_tweets(name,str(year) + '-01-01', str(year) + '-12-31', num_posts, db)
+
+
+def read_tweets(username, start_date, end_date, num_posts, db):
     jsonResult = []
-    tweetCriteria = got.manager.TweetCriteria().setUsername("kyunghyang") \
-        .setSince("2018-01-01") \
-        .setUntil("2018-12-31") \
-        .setMaxTweets(20000)
+    tweetCriteria = got.manager.TweetCriteria().setUsername(username)\
+        .setSince(start_date)\
+        .setUntil(end_date)\
+        .setMaxTweets(num_posts)
     tweets = got.manager.TweetManager.getTweets(tweetCriteria)
     for tweet in tweets:
         getTwitterTwit(tweet, jsonResult, db)
-    print('loaded data: ', len(tweets))
-    #Chosun
-    jsonResult = []
-    tweetCriteria = got.manager.TweetCriteria().setUsername("Chosun") \
-        .setSince("2018-01-01") \
-        .setUntil("2018-12-31") \
-        .setMaxTweets(20000)
-    tweets = got.manager.TweetManager.getTweets(tweetCriteria)
-    for tweet in tweets:
-        getTwitterTwit(tweet, jsonResult, db)
-    print('loaded data: ', len(tweets))
-
-    #joongangilbo
-    jsonResult = []
-    tweetCriteria = got.manager.TweetCriteria().setUsername("joongangilbo") \
-        .setSince("2018-01-01") \
-        .setUntil("2018-12-31") \
-        .setMaxTweets(20000)
-    tweets = got.manager.TweetManager.getTweets(tweetCriteria)
-    for tweet in tweets:
-        getTwitterTwit(tweet, jsonResult, db)
-    print('loaded data: ', len(tweets))
-
+    print(username, '(', start_date, '~', end_date, ')\n','loaded data: ', len(tweets))
 
 if __name__ == '__main__':
     main()
