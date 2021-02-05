@@ -79,10 +79,10 @@ def init_db():
 def main():
     screen_name = ["joongangilbo"]
    # screen_name = ["kyunghyang", "Chosun", "joongangilbo"]
-    CONSUMER_KEY = "qZHgrr3O0knOt075c49LwYLcq"
-    CONSUMER_SECRET = "LhB7M1cIqckNJw6EDTYCxOkeOQ1Gq8fkPIbcd5ril7qa1sEntF"
-    ACCESS_TOKEN = "1147813462250123266-GSdmBBPVDWbiD6cqXcSluBawr0t7JB"
-    ACCESS_SECRET = "kV4L39AIQn7aTsj6ldu8cfYc4H6JwQLVI9VEqvcvtDvZg"
+    CONSUMER_KEY = ""
+    CONSUMER_SECRET = ""
+    ACCESS_TOKEN = ""
+    ACCESS_SECRET = ""
     num_posts = 100000 #max tweets per request
     start_date = "2017-01-01"
     end_date = "2019-06-30"
